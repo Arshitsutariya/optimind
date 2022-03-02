@@ -109,8 +109,8 @@ class _VerificationState extends State<Verification> {
                               children: [
 
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(150, 67, 81.33, 51.55),
-                                  child: Image.asset("assets/Group1.png"),
+                                  padding: const EdgeInsets.fromLTRB(130, 75, 55, 55),
+                                  child: Container(child: Image.asset("assets/Group1.png"),height: 137.6,width: 157.42,),
                                 ),
 
                               ],
@@ -167,9 +167,9 @@ class _VerificationState extends State<Verification> {
                             ),
                             textFieldAlignment: MainAxisAlignment.spaceEvenly,
                             fieldStyle: FieldStyle.box,
-                            onCompleted: (pin) {
-                              print("Completed: " + pin);
-                            },
+                            // onCompleted: (pin) {
+                            //   print("Completed: " + pin);
+                            // },
                           ),
                         ),
                       ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:optimind/Emaillogin.dart';
@@ -19,14 +20,124 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
+  //Our form key
+  final _fromkey = GlobalKey<FormState>();
+
+  var email = '';
+  final _auth = FirebaseAuth.instance;
+
+  final emailEditingController = new TextEditingController();
 
 
+void dispose(){
+  emailEditingController.dispose();
+  super.dispose();
+}
+
+resetPassword() async{
+try {
+await FirebaseAuth.instance.sendPasswordResetEmail(email:
+email);
+ScaffoldMessenger.of (context).showSnackBar(
+    SnackBar(
+      backgroundColor: Color(0xFF0F2851),
+      content: Text(
+        'Password Reset Email has been sent !',
+        style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white),
+      ), // Text
+    ),
+ );// SnackBar
+}on FirebaseAuthException catch(e){
+
+  if(e.code == 'user-not-found'){
+    print('No user found for that email.');
+    ScaffoldMessenger.of (context).showSnackBar(
+        SnackBar(
+          backgroundColor: Color(0xFF0F2851),
+          content: Text(
+            'No user found for that email.',
+            style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white),
+          ), // Text
+        ),
+    );// SnackBar
+  }
+  }
 
 
-
-
+}
   @override
   Widget build(BuildContext context) {
+
+
+
+    //Email field
+
+    final emailField = TextFormField(
+      autofocus: false,
+      controller: emailEditingController,
+      keyboardType: TextInputType.emailAddress,
+
+      validator: (value){
+        if (value == null ||value.isEmpty)
+        {
+          return ("Please Enter Your Email");
+        }
+        //reg expression for email Validation
+        if(!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value))
+        {
+          return ("Please Enter Valid Emailaddress");
+        }
+        return null;
+      },
+      onSaved: (value)
+      {
+        emailEditingController.text = value!;
+      },
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+              borderSide:
+              BorderSide(color: Color(0xFFC3C1C1)),
+              borderRadius: BorderRadius.circular(12)),
+          border: OutlineInputBorder(),
+          labelText: 'Enter your email',
+          hintText: 'Enter valid mail id Ex: abc@gmail.com',
+          hintStyle: TextStyle(fontFamily: 'Gilmer Medium', fontSize: 14.0, color: Color(0xFF6f7d93)),
+
+          labelStyle: TextStyle(
+              fontFamily: 'Gilmer Medium',
+              fontSize: 14.0,
+              color: Color(0xFF6f7d93))
+      ),
+    );
+
+
+    // ForgetButton
+
+    final ForgetButton = RaisedButton(
+      onPressed: () {
+        if(_fromkey.currentState!.validate()){
+          setState(() {
+            email = emailEditingController.text;
+          });
+          resetPassword();
+        }
+      },
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)),
+      child: Text(
+        'Send Email',
+        style: TextStyle(
+            fontSize: 16,
+            fontFamily: 'Gilmer Bold',
+            color: Color(0xFFFFFFFF)),
+      ),
+      color:  Color(0xFF3F4553),
+    );
+
+
+
+
     return WillPopScope(
 
       onWillPop: () async {
@@ -97,8 +208,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                               children: [
 
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(150, 67, 81.33, 51.55),
-                                  child: Image.asset("assets/Group1.png"),
+                                  padding: const EdgeInsets.fromLTRB(130, 75, 55, 55),
+                                  child: Container(child: Image.asset("assets/Group1.png"),height: 137.6,width: 157.42,),
                                 ),
                               ],
                             )
@@ -136,43 +247,32 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       SingleChildScrollView(
                         child: Container(
                           width: 301.94,
-                          height: 48,
-                          child: TextField(
+                          // height: 48,
 
-                            decoration: InputDecoration(
-                                enabledBorder:  OutlineInputBorder(
-                                    borderSide: BorderSide(color: Color(0xFFC3C1C1)),
-                                    borderRadius: BorderRadius.circular(12)),
+                          child: Form(
+                            key: _fromkey,
+                            child: Column(
+                              children: [
+                                SizedBox(child: emailField,),
+                                SizedBox(height: 12,),
+                                SizedBox(child: ForgetButton,height: 55,width: 301.94,),
 
 
 
-                                border: OutlineInputBorder(),
-                                labelText: 'Enter your email',
-                                hintText: 'Enter valid mail id Ex: abc@gmail.com',
-                                hintStyle: TextStyle(fontFamily: 'Gilmer Medium', fontSize: 14.0, color: Color(0xFF6f7d93)),
-                                labelStyle: TextStyle(fontFamily: 'Gilmer Medium', fontSize: 14.0, color: Color(0xFF6f7d93))
+                              ],
                             ),
                           ),
                         ),
-                      ),
+                      )
+                     ,
 
 
 
 
 
-                      SizedBox(height:20,),
 
 
-                      Container(
-                          width: 301.94,
-                          height: 48,
-                          child: RaisedButton( onPressed: (){},
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            child: Text('Submit',style: TextStyle(fontSize: 16,fontFamily: 'Gilmer Bold', color: Color(0xFFFFFFFF)),),
-                            color: Color(0xFF3F4553),
-                          )
 
-                      ),
 
 
                       SizedBox(height: 10),
