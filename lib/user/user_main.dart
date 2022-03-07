@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:optimind/Welcome.dart';
 import 'package:optimind/user%201/Dashboard1.dart';
 
@@ -77,14 +78,23 @@ class _UserMainState extends State<UserMain> {
               Text("Welcome",style: TextStyle(color: Color(0xFF0F2851),fontFamily: "Gilmer Bold",fontSize: 26),),
 
               ElevatedButton(
-                onPressed: () async => {
-                  await FirebaseAuth.instance.signOut(),
+                onPressed: () async {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                duration: Duration(milliseconds: 5000),
+                    backgroundColor: Color(0xFF0F2851),
+                content: Text('Logout is processing...',
+                  style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white),)));
+                GoogleSignIn googleSignIn = GoogleSignIn();
+                await googleSignIn.disconnect();
+
+                  await FirebaseAuth.instance.signOut();
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Welcome(),
                       ),
-                          (route) => false)
+                          (route) => false);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 },
                 child: Text('Logout',style: TextStyle(fontFamily: "Gilmer Bold")),
                 style: ElevatedButton.styleFrom(primary: Color(0xFF3F4553)),

@@ -13,7 +13,7 @@ import 'package:optimind/SignUp.dart';
 import 'package:optimind/Splash.dart';
 import 'package:optimind/Verification.dart';
 import 'package:optimind/Welcome.dart';
-import 'package:optimind/loginwithfacebook.dart';
+
 import 'package:optimind/user/ChangePassword.dart';
 import 'package:optimind/user/Dashboard.dart';
 import 'package:optimind/user/Profile.dart';
@@ -45,7 +45,7 @@ Future <void> main()  async {
       'verification': (context) => Verification(),
       'homescreen': (context) => Homescreen(),
       'usermain': (context) => UserMain(),
-      'loginwithfacebook': (context) => LoginWithFacebook(),
+     // 'loginwithfacebook': (context) => LoginWithFacebook(),
       
 
 

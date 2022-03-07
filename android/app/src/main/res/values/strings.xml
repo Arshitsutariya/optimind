@@ -1,0 +1,9 @@
+<?xml version= "1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">optimind</string>
+    <string name="facebook_app_id">497748651896337</string>
+    <string name="fb_login_protocol_scheme">fb497748651896337</string>
+    <string name="facebook_client_token">fe2176520f8f523ad90664a9d6f34382</string>
+</resources>
+
+

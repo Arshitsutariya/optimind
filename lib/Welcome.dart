@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:optimind/Emaillogin.dart';
+import 'package:optimind/Facebookhome.dart';
 import 'package:optimind/Googlesignin.dart';
 import 'package:optimind/Phonelogin.dart';
 import 'package:optimind/SignUp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:optimind/loginwithfacebook.dart';
+import 'package:optimind/user/user_main.dart';
 import 'package:provider/provider.dart';
 
 
@@ -16,15 +18,25 @@ class Welcome extends StatefulWidget {
 
   @override
   _WelcomeState createState() => _WelcomeState();
+
+
 }
+
+
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized ();
   await Firebase.initializeApp();
   runApp (Welcome());
 }
+
+
 class _WelcomeState extends State<Welcome> {
+
+  Map? _userData ;
   @override
   Widget build(BuildContext context) {
+
 
     // var width = MediaQuery.of(context).size.width;
     // var height =
@@ -185,8 +197,7 @@ class _WelcomeState extends State<Welcome> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
 
                         onPressed: (){
-
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(( context) => LoginWithFacebook())));
+                          facebook();
                         },
                         icon: Padding(
                           padding: const EdgeInsets.fromLTRB(0.0, 0.0, 16.0, 0.0),
@@ -216,13 +227,7 @@ class _WelcomeState extends State<Welcome> {
 
 
 
-
-                       GoogleSignInProvider provider  =
-                       Provider.of<GoogleSignInProvider>(context, listen: false);
-                       print('provider is $provider');
-
-                       provider.googleLogin();
-
+                          signup(context);
 
 
 
@@ -263,4 +268,114 @@ class _WelcomeState extends State<Welcome> {
     ),
     ));
   }
+
+  facebook() async {
+    try {
+      final result = await FacebookAuth.i.login(permissions: [
+        "public_profile",
+        "email",
+        "user_birthday",
+        "user_gender",
+        "user_photos",
+        "user_friends"
+      ]);
+      if (result.status == LoginStatus.success) {
+
+        final requestData = await FacebookAuth.i
+            .getUserData(fields: "email,name,picture,gender,birthday,friends");
+        print('request $requestData');
+
+        final facebookAuthCredential =
+        FacebookAuthProvider.credential(result.accessToken!.token);
+
+        final dattaa = await FirebaseAuth.instance
+            .signInWithCredential(facebookAuthCredential);
+        setState(() {
+         _userData = requestData;
+
+
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FaceBookHome(
+                    data: _userData,
+                  )));
+        });
+      } else {
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Color(0xFF0F2851),
+            content: Text("Result Failed",
+              style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white))));
+      }
+    } catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Color(0xFF0F2851),
+          content: Text("Error",
+          style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white))));
+    } on FirebaseAuthException catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.orangeAccent,
+          content: Text(e.code,
+              style: TextStyle(fontSize: 18, color: Colors.black))));
+    }
+  }
+
+
+
+
+
+  Future<void> signup(BuildContext context) async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+
+      final GoogleSignInAccount? googleSignInAccount =
+      await googleSignIn.signIn();
+
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
+        final AuthCredential authCredential = GoogleAuthProvider.credential(
+            idToken: googleSignInAuthentication.idToken,
+            accessToken: googleSignInAuthentication.accessToken);
+
+        // Getting users credential
+        var auth = FirebaseAuth.instance;
+        UserCredential result = await auth.signInWithCredential(authCredential);
+        User? user = result.user;
+        print('user deatils ${user}');
+
+        if (result != null) {
+
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => UserMain()));
+        }
+      } else {
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Color(0xFF0F2851),
+            content: Text('something went wrong',
+                style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white))));
+        print('else is printing');
+      }
+    } on FirebaseAuthException catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Color(0xFF0F2851),
+          content: Text(e.code,
+              style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white))));
+    } catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Color(0xFF0F2851),
+          content: Text('${e}',
+              style: TextStyle(fontSize: 18.0,fontFamily: "Gilmer Medium",color: Colors.white))));
+    }
+  }
 }
+//
+// class _userData {
+// }
+

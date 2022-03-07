@@ -12,7 +12,7 @@ import 'package:optimind/user/user_main.dart';
 
 
 class Emaillogin extends StatefulWidget {
-  const Emaillogin({Key? key}) : super(key: key);
+  const Emaillogin({Key? key, data}) : super(key: key);
 
   @override
   _EmailloginState createState() => _EmailloginState();
