@@ -489,7 +489,7 @@ class _SignUpState extends State<SignUp> {
 
 
 
-  void signup(String email, String password) async
+  signup(String email, String password) async
   {
      if(_fromkey.currentState!.validate());
      {

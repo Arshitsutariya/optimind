@@ -45,7 +45,7 @@ var password = '';
 
 
   //firebase
-  final _auth = FirebaseAuth.instance;
+    final _auth = FirebaseAuth.instance;
 
 
 
@@ -64,12 +64,7 @@ var password = '';
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
       onChanged: (text){
-
       },
-
-
-
-
 
       validator: (value){
         if (value== null || value.isEmpty)
@@ -193,7 +188,7 @@ var password = '';
 
 
 
-    return WillPopScope(
+      return WillPopScope(
       onWillPop: () async {
         print('Backbutton pressed');
         final shouldPop = await Navigator.pushReplacement(
@@ -210,9 +205,9 @@ var password = '';
 
 
 
-        child: Scaffold(
-          body: Padding(
-              padding: const EdgeInsets.all(0.0),
+          child: Scaffold(
+            body: Padding(
+                padding: const EdgeInsets.all(0.0),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -309,20 +304,21 @@ var password = '';
                     ),
 
 
-                      SingleChildScrollView(
-                        child: Container(
-                          width: 301.94,
-                          // height: 48,
+                        SingleChildScrollView(
+                          child: Container(
+                            width: 301.94,
 
-                          child: Form(
-                            key: _formkey,
-                            child: Column(
-                              children: [
-                                SizedBox(child: emailField,),
-                                SizedBox(height: 12,),
-                                SizedBox(child: passwordField,),
-                                SizedBox(height:12,),
-                                SizedBox(child: loginButton,height: 60,width: 301.94,)
+                            // height: 48,
+
+                            child: Form(
+                              key: _formkey,
+                              child: Column(
+                                children: [
+                                  SizedBox(child: emailField,),
+                                  SizedBox(height: 12,),
+                                  SizedBox(child: passwordField,),
+                                  SizedBox(height:12,),
+                                  SizedBox(child: loginButton,height: 60,width: 301.94,)
                               ],
                             ),
                           ),
@@ -454,7 +450,7 @@ var password = '';
     });
   }
 
-  void signin(String email, String password) async {
+  signin(String email, String password) async {
     if (_formkey.currentState!.validate()) {
 
 

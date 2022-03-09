@@ -87,38 +87,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// class IntializerWidget extends StatefulWidget {
-//
-//   @override
-//   _IntializerWidgetState createState() => _IntializerWidgetState();
-// }
-//
-// class _IntializerWidgetState extends State<IntializerWidget> {
-//
-//   late FirebaseAuth _auth;
-//   late User _user;
-//
-//
-//   bool isLoading = true;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _auth = FirebaseAuth.instance;
-//     _user = _auth.currentUser!;
-//     isLoading = false;
-//
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     return isLoading ? Scaffold(
-//       body: Center(
-//         child: CircularProgressIndicator()
-//         ,
-//       ),
-//
-//     ) : _user == null ? Phonelogin() : Homescreen();
-//   }
-// }
-
